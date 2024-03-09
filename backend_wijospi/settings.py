@@ -37,6 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'backend_wijospi.category',
+    'backend_wijospi.customer',
+    'backend_wijospi.drink_rack',
+    'backend_wijospi.packaging',
+    'backend_wijospi.purchase',
+    'backend_wijospi.purchase_rack',
+    'backend_wijospi.storehouse',
+    'backend_wijospi.supply',
 ]
 
 MIDDLEWARE = [
@@ -75,8 +83,12 @@ WSGI_APPLICATION = 'backend_wijospi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'wijospi',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',   # L'adresse IP de votre base de données, généralement 'localhost' pour le développement en local
+        'PORT': '3306',        # Le port de votre base de données MySQL, généralement '3306' par défaut
     }
 }
 
