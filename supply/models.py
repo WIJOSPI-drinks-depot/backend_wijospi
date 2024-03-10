@@ -1,9 +1,9 @@
-import datetime
+from datetime import datetime
 from django.db import models
 
 # Create your models here.
 class Supply(models.Model):
-    date = models.DateField(default=datetime.now())
+    date = models.DateField(default=datetime.now)
     storehouse = models.ForeignKey('storehouse.Storehouse', on_delete=models.CASCADE)
     drink_racks = models.ManyToManyField('drink_rack.DrinkRack', through='SupplyDrinkRack')
     created_at = models.DateTimeField(null=True, default=None)
@@ -29,8 +29,8 @@ class Supply(models.Model):
 
 # Relation n à n entre APPROVISIONNEMENT et CASIER_BOISSON
 class SupplyDrinkRack(models.Model):
-    supply = models.ForeignKey(Supply, verbose_name=_("Approvisionnement"), on_delete=models.CASCADE)
-    drink_rack = models.ForeignKey("drink_rack.DrinkRack", verbose_name=_("Casier de boisson"), on_delete=models.CASCADE)
+    supply = models.ForeignKey(Supply, verbose_name=("Approvisionnement"), on_delete=models.CASCADE)
+    drink_rack = models.ForeignKey("drink_rack.DrinkRack", verbose_name=("Casier de boisson"), on_delete=models.CASCADE)
     supply_quantity = models.IntegerField() # La quantité approvisionnée du casier de boisson
     
     class Meta:

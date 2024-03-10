@@ -37,14 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'backend_wijospi.category',
-    'backend_wijospi.customer',
-    'backend_wijospi.drink_rack',
-    'backend_wijospi.packaging',
-    'backend_wijospi.purchase',
-    'backend_wijospi.purchase_rack',
-    'backend_wijospi.storehouse',
-    'backend_wijospi.supply',
+    'category',
+    'customer',
+    'drink_rack',
+    'packaging',
+    'purchase',
+    'purchase_rack',
+    'storehouse',
+    'supply',
 ]
 
 MIDDLEWARE = [

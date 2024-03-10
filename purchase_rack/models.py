@@ -30,7 +30,7 @@ class PurchaseRack(models.Model):
 # Relation n à n entre CASIER_ACHAT et CASIER_BOISSON
 class PurchaseRackDrinkRack(models.Model):
     purchase_rack = models.ForeignKey(PurchaseRack, verbose_name="Casier d'achat", on_delete=models.CASCADE)
-    drink_rack = models.ForeignKey("drink_rack.DrinkRack", verbose_name=_("Casier de boisson"), on_delete=models.CASCADE)
+    drink_rack = models.ForeignKey("drink_rack.DrinkRack", verbose_name=("Casier de boisson"), on_delete=models.CASCADE)
     capacity = models.IntegerField() # Quantité de boisson choisie du casier de boisson
     
     class Meta:

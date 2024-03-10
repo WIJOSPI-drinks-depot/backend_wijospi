@@ -1,9 +1,9 @@
-import datetime
+from datetime import datetime
 from django.db import models
 
 # Create your models here.
 class Purchase(models.Model):
-    date_time = models.DateTimeField(default=datetime.now())
+    date_time = models.DateTimeField(default=datetime.now)
     customer = models.ForeignKey('customer.Customer', on_delete=models.CASCADE)
     storehouse = models.ForeignKey('storehouse.Storehouse', on_delete=models.CASCADE)
     created_at = models.DateTimeField(null=True, default=None)

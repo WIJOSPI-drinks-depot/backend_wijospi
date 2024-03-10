@@ -1,10 +1,10 @@
-import datetime
+from datetime import datetime
 from django.db import models
 
 # Create your models here.
 class DrinkRack(models.Model):
     name = models.CharField(max_length=40)
-    capacity = models.DecimalField()
+    capacity = models.DecimalField(max_digits=5, decimal_places=2) # La contenance d'une bouteille en cl
     lifespan = models.SmallIntegerField(default=12) # La durée de vie est en mois
     price = models.IntegerField() # Il s'agit du prix du casier
     category = models.ForeignKey("category.Category", verbose_name="Catégorie", on_delete=models.CASCADE)
