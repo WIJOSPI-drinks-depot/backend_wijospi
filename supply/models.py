@@ -6,21 +6,12 @@ class Supply(models.Model):
     date = models.DateField(default=datetime.now)
     storehouse = models.ForeignKey('storehouse.Storehouse', on_delete=models.CASCADE)
     drink_racks = models.ManyToManyField('drink_rack.DrinkRack', through='SupplyDrinkRack')
-    created_at = models.DateTimeField(null=True, default=None)
-    updated_at = models.DateTimeField(null=True, default=None)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, default=None)
     
     def __str__(self):
         return(self.date)
-    
-    def create(self):
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
-        self.save()
-        
-    def update(self):
-        self.updated_at = datetime.now()
-        self.save()
     
     def soft_delete(self):
         self.deleted_at = datetime.now()
