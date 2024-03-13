@@ -21,7 +21,6 @@ class Storehouse(models.Model):
     
     def soft_delete(self):
         self.deleted_at = datetime.now()
-        self.updated_at = datetime.now()
         self.save()
 
 # relation n à n entre DEPOT et CASIER_BOISSON

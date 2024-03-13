@@ -17,4 +17,5 @@ class CategoryViewset(ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.soft_delete()
+        
         return Response(status=status.HTTP_204_NO_CONTENT)
