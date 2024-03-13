@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.db import models
 
@@ -19,5 +19,4 @@ class Customer(models.Model):
     
     def soft_delete(self):
         self.deleted_at = datetime.now()
-        self.updated_at = datetime.now()
         self.save()
