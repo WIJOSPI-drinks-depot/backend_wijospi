@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from django.db import models
 
 # Create your models here.
@@ -13,5 +13,4 @@ class Category(models.Model):
     
     def soft_delete(self):
         self.deleted_at = datetime.now()
-        self.updated_at = datetime.now()
         self.save()
