@@ -11,7 +11,7 @@ class Purchase(models.Model):
     deleted_at = models.DateTimeField(null=True, default=None)
     
     def __str__(self):
-        return(self.date_time)
+        return(f"{self.customer} - {self.date_time} - {self.storehouse}")
     
     def soft_delete(self):
         self.deleted_at = datetime.now()

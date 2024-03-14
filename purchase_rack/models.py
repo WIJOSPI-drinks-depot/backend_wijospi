@@ -1,9 +1,9 @@
-import datetime
+from datetime import datetime
 from django.db import models
 
 # Create your models here.
 class PurchaseRack(models.Model):
-    capacity = models.IntegerField() # Le nombre de bouteilles ou de canettes dans le casier
+    capacity = models.IntegerField() # Le nombre de place disponible dans le casier
     quantity = models.IntegerField() # Le nombre de casier commandé
     purchase = models.ForeignKey('purchase.Purchase', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -15,7 +15,6 @@ class PurchaseRack(models.Model):
     
     def soft_delete(self):
         self.deleted_at = datetime.now()
-        self.updated_at = datetime.now()
         self.save()
 
 # Relation n à n entre CASIER_ACHAT et CASIER_BOISSON
