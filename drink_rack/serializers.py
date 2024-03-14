@@ -7,7 +7,7 @@ from packaging.models import Packaging
 
 class DrinkRackSerializer(ModelSerializer):
     
-    # N'afficher que les catégories et conditionnements non supprimés dans les selects
+    # Afficher uniquement les catégories et conditionnements non supprimés
     category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.filter(deleted_at=None))
     packaging = serializers.PrimaryKeyRelatedField(queryset=Packaging.objects.filter(deleted_at=None))
     
