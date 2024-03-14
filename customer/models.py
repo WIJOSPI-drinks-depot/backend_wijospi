@@ -15,7 +15,7 @@ class Customer(models.Model):
     deleted_at = models.DateTimeField(null=True, default=None)
     
     def __str__(self):
-        return(self.name)
+        return(f"{self.surname} {self.name}")
     
     def soft_delete(self):
         self.deleted_at = datetime.now()
