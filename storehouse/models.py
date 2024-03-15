@@ -29,13 +29,21 @@ class StorehouseDrinkRack(models.Model):
     drink_rack = models.ForeignKey("drink_rack.DrinkRack", verbose_name=("casier de boisson"), on_delete=models.CASCADE)
     stock_quantity = models.IntegerField() # Il s'agit de la quantité dont dispose le dépôt du casier de boisson
     creation_date = models.DateField() #  La date de création permet de connaître la date de péremption en y ajoutant la durée de vie du casier de boisson
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, default=None)
 
+    if()
     class Meta:
         unique_together = ('storehouse', 'drink_rack')
 
     def __str__(self):
         return f"{self.storehouse} - {self.drink_rack}"
     
+    def soft_delete(self):
+        self.deleted_at = datetime.now()
+        self.save()
+        
     # Fonction permettant de calculer la date de péremption du casier de boisson
     def expiration_date(self):
         # Récupérer la durée de vie du casier du modèle drink_rack
