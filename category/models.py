@@ -1,5 +1,8 @@
 from datetime import datetime
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 # Create your models here.
 class Category(models.Model):
@@ -14,3 +17,20 @@ class Category(models.Model):
     def soft_delete(self):
         self.deleted_at = datetime.now()
         self.save()
+        
+@receiver(pre_save, sender=Category)
+def check_unique_on_create(sender, instance, **kwargs):
+    if instance._state.adding:
+        existing_objects = sender.objects.filter(
+            deleted_at=None,
+            name=instance.name
+        ).exclude(pk=instance.pk)
+        
+        if existing_objects.exists():
+            
+            raise ValidationError(
+                {'error': 'Une catégorie avec le même nom existe déjà.'},
+                code='unique_together',
+            )
+            
+            

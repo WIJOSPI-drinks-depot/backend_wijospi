@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -16,24 +17,24 @@ class CategoryViewset(ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         # Vérifier si le contenu de la requête est JSON
-        if request.content_type == 'application/json':
-            # Analyser les données JSON envoyées dans la requête
-            json_data = request.data
-            
-            # Extraire les données de l'objet JSON
-            category_name = json_data.get('category_name')
-            
-            # Créer une nouvelle instance de catégorie
-            category = Category.objects.create(name=category_name)
-            
-            # Serializer la nouvelle instance de catégorie
-            serializer = CategorySerializer(category)
-            
-            # Retourner une réponse avec les données sérialisées
-            return Response(serializer.data, status=201)
+        if request.method == 'POST' and request.content_type == 'application/json':
+            try:
+                json_data = request.data
+                
+                category_name = json_data.get('category_name')
+                
+                category = Category.objects.create(name=category_name)
+                
+                serializer = CategorySerializer(category)
+                
+                return Response({'category': serializer.data, 'success_message': 'Catégorie enregistrée avec succès.'}, status=status.HTTP_201_CREATED)
+            except ValidationError as e:
+                error_message = e.messages
+                
+                return Response({'error_message': error_message}, status=status.HTTP_400_BAD_REQUEST)
         else:
             # Si le contenu de la requête n'est pas JSON, renvoyer une erreur
-            return Response({'error': 'Invalid content type'}, status=400)
+            return Response({'error': 'Invalid content type'}, status=status.HTTP_400_BAD_REQUEST)
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
