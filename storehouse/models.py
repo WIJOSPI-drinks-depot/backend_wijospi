@@ -2,6 +2,11 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+from rest_framework import status
+from rest_framework.response import Response
 
 # Create your models here.
 class Storehouse(models.Model):
@@ -33,10 +38,6 @@ class StorehouseDrinkRack(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, default=None)
 
-    if()
-    class Meta:
-        unique_together = ('storehouse', 'drink_rack')
-
     def __str__(self):
         return f"{self.storehouse} - {self.drink_rack}"
     
@@ -48,9 +49,26 @@ class StorehouseDrinkRack(models.Model):
     def expiration_date(self):
         # Récupérer la durée de vie du casier du modèle drink_rack
         lifespan = self.drink_rack.lifespan
+        
         exp_date = self.creation_date + relativedelta(months=lifespan)
         
         return exp_date
  
- 
-
+# Vérifier s'il n'existe pas déjà une relation entre un dépôt et un casier de boisson
+# avant d'enregistrer une nouvelle relation
+# tout en excluant les relations supprimées (suppression logique) de cette vérification
+@receiver(pre_save, sender=StorehouseDrinkRack)
+def check_unique_on_create(sender, instance, **kwargs):
+    if instance._state.adding:
+        existing_objects = sender.objects.filter(
+            deleted_at=None,
+            storehouse=instance.storehouse,
+            drink_rack=instance.drink_rack,
+            creation_date=instance.creation_date
+        ).exclude(pk=instance.pk)
+    
+        if existing_objects.exists():
+            raise ValidationError(
+                {'error': 'Une entrée avec les mêmes valeurs existe déjà.'},
+                code='unique_together',
+            )
