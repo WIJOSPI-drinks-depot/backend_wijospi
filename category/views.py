@@ -6,6 +6,10 @@ from rest_framework.viewsets import ModelViewSet
 from category.models import Category
 from category.serializers import CategorySerializer
 
+# Messages types
+error = 'error'
+success = 'success'
+
 class CategoryViewset(ModelViewSet):
     
     serializer_class = CategorySerializer
@@ -27,11 +31,11 @@ class CategoryViewset(ModelViewSet):
                 
                 serializer = CategorySerializer(category)
                 
-                return Response({'category': serializer.data, 'success_message': 'Catégorie enregistrée avec succès.'}, status=status.HTTP_201_CREATED)
+                return Response({'category': serializer.data, 'message': 'Catégorie enregistrée avec succès.', 'type': success}, status=status.HTTP_201_CREATED)
             except ValidationError as e:
                 error_message = e.messages
                 
-                return Response({'error_message': error_message}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message': error_message, 'type': error}, status=status.HTTP_400_BAD_REQUEST)
         else:
             # Si le contenu de la requête n'est pas JSON, renvoyer une erreur
             return Response({'error': 'Invalid content type'}, status=status.HTTP_400_BAD_REQUEST)
