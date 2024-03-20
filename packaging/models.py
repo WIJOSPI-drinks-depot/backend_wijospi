@@ -21,7 +21,7 @@ class Packaging(models.Model):
 # Vérifier l'unicité du nom du conditionnement
 @receiver(pre_save, sender=Packaging)
 def check_unique_on_create(sender, instance, **kwargs):
-    if instance._state.adding:
+    if (instance._state.adding) or ((instance.pk is not None) and (not instance.deleted_at)): # Création et Modification uniquement
         existing_objects = sender.objects.filter(
             deleted_at=None,
             name=instance.name

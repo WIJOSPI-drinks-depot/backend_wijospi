@@ -37,7 +37,32 @@ class PackagingViewset(ModelViewSet):
                 error_message = e.messages
                 
                 return Response({'message': error_message, 'type': error}, status=status.HTTP_400_BAD_REQUEST)
-        return
+        else:
+            # Si le contenu de la requête n'est pas JSON, renvoyer une erreur
+            return Response({'error': 'Invalid content type'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def update(self, request, *args, **kwargs):
+        # Vérifier si la méthode est PUT et le contenu de la requête est JSON
+        if request.method == 'PUT' and request.content_type == 'application/json':
+            try:
+                instance = self.get_object()
+                json_data = request.data
+                
+                packaging_name = json_data.get('packaging_name')
+                
+                instance.name = packaging_name
+                instance.save()
+                
+                serializer = PackagingSerializer(instance)
+                
+                return Response({'packaging': serializer.data, 'message': 'Conditionnement modifié avec succès.', 'type': success}, status=status.HTTP_200_OK)
+            except ValidationError as e:
+                error_message = e.messages
+                
+                return Response({'message': error_message, 'type': error}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            # Si le contenu de la requête n'est pas JSON, renvoyer une erreur
+            return Response({'error': 'Invalid content type'}, status=status.HTTP_400_BAD_REQUEST)
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

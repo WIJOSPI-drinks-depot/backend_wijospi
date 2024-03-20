@@ -54,12 +54,11 @@ class CategoryViewset(ModelViewSet):
                 
                 serializer = CategorySerializer(instance)
                 
-                return Response({'category': serializer.data, 'message': 'Catégorie modifiée avec succès.', 'type': 'success'}, status=status.HTTP_200_OK)
+                return Response({'category': serializer.data, 'message': 'Catégorie modifiée avec succès.', 'type': success}, status=status.HTTP_200_OK)
             except ValidationError as e:
                 error_message = e.messages
                 
-                
-                return Response({'message': error_message, 'type': 'error'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message': error_message, 'type': error}, status=status.HTTP_400_BAD_REQUEST)
         else:
             # Si le contenu de la requête n'est pas JSON, renvoyer une erreur
             return Response({'error': 'Invalid content type'}, status=status.HTTP_400_BAD_REQUEST)
