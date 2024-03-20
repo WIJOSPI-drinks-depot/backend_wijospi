@@ -1,3 +1,6 @@
+from django.contrib.auth.hashers import make_password
+from django.core.exceptions import ValidationError
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -7,6 +10,10 @@ from storehouse.models import StorehouseDrinkRack
 from storehouse.serializers import StorehouseSerializer
 from storehouse.serializers import StorehouseDrinkRackSerializer
 
+# Messages types
+error = 'error'
+success = 'success'
+
 class StorehouseViewset(ModelViewSet):
     
     serializer_class = StorehouseSerializer
@@ -15,6 +22,73 @@ class StorehouseViewset(ModelViewSet):
         queryset = Storehouse.objects.filter(deleted_at=None)
         
         return queryset
+    
+    def create(self, request, *args, **kwargs):
+        # Vérifier si la méthode est POST et le contenu de la requête est JSON
+        if request.method == 'POST' and request.content_type == 'application/json':
+            try:
+                json_data = request.data
+                
+                storehouse_name = json_data.get('name')
+                storehouse_contact = json_data.get('contact')
+                storehouse_type = json_data.get('type')
+                storehouse_address = json_data.get('address')
+                storehouse_email = json_data.get('email')
+                storehouse_hashed_password = make_password(json_data.get('password'))
+                
+                storehouse = Storehouse.objects.create(
+                    name = storehouse_name,
+                    contact = storehouse_contact,
+                    type = storehouse_type,
+                    address = storehouse_address,
+                    email = storehouse_email,
+                    password = storehouse_hashed_password,
+                )
+                
+                serializer = StorehouseSerializer(storehouse)
+                
+                return Response({'storehouse': serializer.data, 'message': 'Dépôt de boisson enregistré avec succès.', 'type': success}, status=status.HTTP_201_CREATED)
+            except ValidationError as e:
+                error_message = e.messages
+                
+                return Response({'message': error_message, 'type': error}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            # Si le contenu de la requête n'est pas JSON, renvoyer une erreur
+            return Response({'error': 'Invalid content type'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def update(self, request, *args, **kwargs):
+        # Vérifier si la méthode est PUT et le contenu de la requête est JSON
+        if request.method == 'PUT' and request.content_type == 'application/json':
+            try:
+                instance = self.get_object()
+                json_data = request.data
+                
+                storehouse_name = json_data.get('name')
+                storehouse_contact = json_data.get('contact')
+                storehouse_type = json_data.get('type')
+                storehouse_address = json_data.get('address')
+                storehouse_email = json_data.get('email')
+                storehouse_hashed_password = make_password(json_data.get('password'))
+                
+                instance.name = storehouse_name
+                instance.contact = storehouse_contact
+                instance.type = s
+                torehouse_type
+                instance.address = storehouse_address
+                instance.email = storehouse_email
+                instance.password = storehouse_hashed_password
+                instance.save()
+                
+                serializer = StorehouseSerializer(instance)
+                
+                return Response({'storehouse': serializer.data, 'message': 'Dépôt de boisson modifié avec succès.', 'type': success}, status=status.HTTP_201_CREATED)
+            except ValidationError as e:
+                error_message = e.messages
+                
+                return Response({'message': error_message, 'type': error}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            # Si le contenu de la requête n'est pas JSON, renvoyer une erreur
+            return Response({'error': 'Invalid content type'}, status=status.HTTP_400_BAD_REQUEST)
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

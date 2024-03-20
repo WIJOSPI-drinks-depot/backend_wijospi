@@ -26,6 +26,22 @@ class Storehouse(models.Model):
         self.deleted_at = datetime.now()
         self.save()
 
+@receiver(pre_save, sender=Storehouse)
+def check_uniqueness(sender, instance, **kwargs):
+    if (instance._state.adding) or ((instance.pk is not None) and (not instance.deleted_at)): # Création et Modification uniquement
+        existing_objects = sender.objects.filter(
+            deleted_at=None,
+            name=instance.name,
+            contact=instance.contact,
+            email=instance.email,
+        ).exclude(pk=instance.pk)
+        
+        if existing_objects.exists():
+            raise ValidationError(
+                {'error': 'Un dépôt avec le même nom, contact ou email existe déjà.'},
+                code='unique_together',
+            )
+
 # relation n à n entre DEPOT et CASIER_BOISSON
 class StorehouseDrinkRack(models.Model):
     storehouse = models.ForeignKey(Storehouse, verbose_name=("Dépôt"), on_delete=models.CASCADE)
