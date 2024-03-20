@@ -72,8 +72,7 @@ class StorehouseViewset(ModelViewSet):
                 
                 instance.name = storehouse_name
                 instance.contact = storehouse_contact
-                instance.type = s
-                torehouse_type
+                instance.type = storehouse_type
                 instance.address = storehouse_address
                 instance.email = storehouse_email
                 instance.password = storehouse_hashed_password
