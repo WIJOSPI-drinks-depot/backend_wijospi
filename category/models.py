@@ -19,7 +19,7 @@ class Category(models.Model):
         self.save()
         
 @receiver(pre_save, sender=Category)
-def check_unique_on_create(sender, instance, **kwargs):
+def check_uniqueness(sender, instance, **kwargs):
     if (instance._state.adding) or ((instance.pk is not None) and (not instance.deleted_at)): # Création et Modification uniquement
         existing_objects = sender.objects.filter(
             deleted_at=None,
@@ -27,7 +27,6 @@ def check_unique_on_create(sender, instance, **kwargs):
         ).exclude(pk=instance.pk)
         
         if existing_objects.exists():
-            
             raise ValidationError(
                 {'error': 'Une catégorie avec le même nom existe déjà.'},
                 code='unique_together',
