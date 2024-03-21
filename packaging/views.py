@@ -25,8 +25,8 @@ class PackagingViewset(ModelViewSet):
         if request.method == 'POST' and request.content_type == 'application/json':
             try:
                 json_data = request.data
-                
-                packaging_name = json_data.get('packaging_name')
+
+                packaging_name = json_data.get('name')
                 
                 packaging = Packaging.objects.create(name=packaging_name)
                 
@@ -48,7 +48,7 @@ class PackagingViewset(ModelViewSet):
                 instance = self.get_object()
                 json_data = request.data
                 
-                packaging_name = json_data.get('packaging_name')
+                packaging_name = json_data.get('name')
                 
                 instance.name = packaging_name
                 instance.save()
