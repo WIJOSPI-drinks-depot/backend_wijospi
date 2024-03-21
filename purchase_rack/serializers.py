@@ -3,6 +3,7 @@ from rest_framework.serializers import ModelSerializer
 
 from purchase.models import Purchase
 from purchase_rack.models import PurchaseRack
+from purchase_rack.models import PurchaseRackDrinkRack
 
 class PurchaseRackSerializer(ModelSerializer):
     
@@ -13,3 +14,9 @@ class PurchaseRackSerializer(ModelSerializer):
         model = PurchaseRack
         fields = ['id', 'capacity', 'quantity', 'purchase']
         # read_only_fields = ['capacity']
+        
+class PurchaseRackDrinkRackSerializer(ModelSerializer):
+    
+    class Meta:
+        model = PurchaseRackDrinkRack
+        fields = ['id', 'purchase_rack', 'drink_rack', 'capacity']
