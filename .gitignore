@@ -1,2 +1,4 @@
 *.pyc
 *_initial.py
+*_alter*.py
+*_remove*.py

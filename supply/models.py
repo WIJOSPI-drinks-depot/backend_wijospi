@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 class Supply(models.Model):
-    date = models.DateField(default=datetime.now)
+    date_time = models.DateTimeField(default=datetime.now)
     storehouse = models.ForeignKey('storehouse.Storehouse', on_delete=models.CASCADE)
     drink_racks = models.ManyToManyField('drink_rack.DrinkRack', through='SupplyDrinkRack')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -15,7 +15,6 @@ class Supply(models.Model):
     
     def soft_delete(self):
         self.deleted_at = datetime.now()
-        self.updated_at = datetime.now()
         self.save()
 
 # Relation n à n entre APPROVISIONNEMENT et CASIER_BOISSON

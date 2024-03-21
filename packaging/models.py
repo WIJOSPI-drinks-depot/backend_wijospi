@@ -1,5 +1,8 @@
-import datetime
+from datetime import datetime
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 # Create your models here.
 class Packaging(models.Model):
@@ -13,5 +16,19 @@ class Packaging(models.Model):
     
     def soft_delete(self):
         self.deleted_at = datetime.now()
-        self.updated_at = datetime.now()
         self.save()
+        
+# Vérifier l'unicité du nom du conditionnement
+@receiver(pre_save, sender=Packaging)
+def check_uniqueness(sender, instance, **kwargs):
+    if (instance._state.adding) or ((instance.pk is not None) and (not instance.deleted_at)): # Création et Modification uniquement
+        existing_objects = sender.objects.filter(
+            deleted_at=None,
+            name=instance.name
+        ).exclude(pk=instance.pk)
+        
+        if existing_objects.exists():
+            raise ValidationError(
+                {'error': 'Un conditionnement avec le même nom existe déjà.'},
+                code='unique_together'
+            )
