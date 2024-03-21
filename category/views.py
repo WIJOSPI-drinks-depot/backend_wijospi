@@ -26,7 +26,7 @@ class CategoryViewset(ModelViewSet):
             try:
                 json_data = request.data
                 
-                category_name = json_data.get('category_name')
+                category_name = json_data.get('name')
                 
                 category = Category.objects.create(name=category_name)
                 
@@ -48,7 +48,7 @@ class CategoryViewset(ModelViewSet):
                 instance = self.get_object()
                 json_data = request.data
                 
-                category_name = json_data.get('category_name')
+                category_name = json_data.get('name')
                 
                 instance.name = category_name
                 instance.save()
