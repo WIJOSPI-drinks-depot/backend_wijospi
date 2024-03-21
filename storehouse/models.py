@@ -29,16 +29,36 @@ class Storehouse(models.Model):
 @receiver(pre_save, sender=Storehouse)
 def check_uniqueness(sender, instance, **kwargs):
     if (instance._state.adding) or ((instance.pk is not None) and (not instance.deleted_at)): # Création et Modification uniquement
-        existing_objects = sender.objects.filter(
+        existing_name = sender.objects.filter(
             deleted_at=None,
             name=instance.name,
+        ).exclude(pk=instance.pk)
+        
+        existing_contact = sender.objects.filter(
+            deleted_at=None,
             contact=instance.contact,
+        ).exclude(pk=instance.pk)
+        
+        existing_email = sender.objects.filter(
+            deleted_at=None,
             email=instance.email,
         ).exclude(pk=instance.pk)
         
-        if existing_objects.exists():
+        if existing_name.exists():
             raise ValidationError(
-                {'error': 'Un dépôt avec le même nom, contact ou email existe déjà.'},
+                {'error': 'Un dépôt avec le même nom existe déjà.'},
+                code='unique_together',
+            )
+        
+        if existing_contact.exists():
+            raise ValidationError(
+                {'error': 'Un dépôt avec le même contact existe déjà.'},
+                code='unique_together',
+            )
+        
+        if existing_email.exists():
+            raise ValidationError(
+                {'error': 'Un dépôt avec le même email existe déjà.'},
                 code='unique_together',
             )
 
