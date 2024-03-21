@@ -80,7 +80,7 @@ class StorehouseViewset(ModelViewSet):
                 
                 serializer = StorehouseSerializer(instance)
                 
-                return Response({'storehouse': serializer.data, 'message': 'Dépôt de boisson modifié avec succès.', 'type': success}, status=status.HTTP_201_CREATED)
+                return Response({'storehouse': serializer.data, 'message': 'Dépôt de boisson modifié avec succès.', 'type': success}, status=status.HTTP_200_OK)
             except ValidationError as e:
                 error_message = e.messages
                 
@@ -103,6 +103,64 @@ class StorehouseDrinkRackViewset(ModelViewSet):
         queryset = StorehouseDrinkRack.objects.filter(deleted_at=None)
         
         return queryset
+    
+    def create(self, request, *args, **kwargs):
+        # Vérifier si la méthode est POST et le contenu de la requête est JSON
+        if request.method == 'POST' and request.content_type == 'application/json':
+            try:
+                json_data = request.data
+                
+                storehouse_drink_rack_storehouse = json_data.get('storehouse')
+                storehouse_drink_rack_drink_rack = json_data.get('drink_rack')
+                storehouse_drink_rack_stock_quantity = json_data.get('stock_quantity')
+                storehouse_drink_rack_creation_date = json_data.get('creation_date')
+                
+                storehouse = Storehouse.objects.create(
+                    storehouse = storehouse_drink_rack_storehouse,
+                    drink_rack = storehouse_drink_rack_drink_rack,
+                    stock_quantity = storehouse_drink_rack_stock_quantity,
+                    creation_date = storehouse_drink_rack_creation_date,
+                )
+                
+                serializer = StorehouseSerializer(storehouse)
+                
+                return Response({'storehouse': serializer.data, 'message': 'Quantité de stock enregistrée avec succès.', 'type': success}, status=status.HTTP_201_CREATED)
+            except ValidationError as e:
+                error_message = e.messages
+                
+                return Response({'message': error_message, 'type': error}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            # Si le contenu de la requête n'est pas JSON, renvoyer une erreur
+            return Response({'error': 'Invalid content type'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def update(self, request, *args, **kwargs):
+        # Vérifier si la méthode est PUT et le contenu de la requête est JSON
+        if request.method == 'PUT' and request.content_type == 'application/json':
+            try:
+                instance = self.get_object()
+                json_data = request.data
+                
+                storehouse_drink_rack_storehouse = json_data.get('storehouse')
+                storehouse_drink_rack_drink_rack = json_data.get('drink_rack')
+                storehouse_drink_rack_stock_quantity = json_data.get('stock_quantity')
+                storehouse_drink_rack_creation_date = json_data.get('creation_date')
+                
+                instance.storehouse = storehouse_drink_rack_storehouse
+                instance.drink_rack = storehouse_drink_rack_drink_rack
+                instance.stock_quantity = storehouse_drink_rack_stock_quantity
+                instance.creation_date = storehouse_drink_rack_creation_date
+                instance.save()
+                
+                serializer = StorehouseSerializer(instance)
+                
+                return Response({'storehouse_drink_rack': serializer.data, 'message': 'Quantité de stock modifiée avec succès.', 'type': success}, status=status.HTTP_200_OK)
+            except ValidationError as e:
+                error_message = e.messages
+                
+                return Response({'message': error_message, 'type': error}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            # Si le contenu de la requête n'est pas JSON, renvoyer une erreur
+            return Response({'error': 'Invalid content type'}, status=status.HTTP_400_BAD_REQUEST)
         
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
