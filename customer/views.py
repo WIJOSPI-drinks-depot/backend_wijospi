@@ -78,7 +78,7 @@ class CustomerViewset(ModelViewSet):
                 
                 serializer = CustomerSerializer(instance)
                 
-                return Response({'customer': serializer.data, 'message': 'Client modifié avec succès.', 'type': success}, status=status.HTTP_201_CREATED)
+                return Response({'customer': serializer.data, 'message': 'Client modifié avec succès.', 'type': success}, status=status.HTTP_200_OK)
             except ValidationError as e:
                 error_message = e.messages
                 

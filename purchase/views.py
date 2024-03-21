@@ -65,7 +65,7 @@ class PurchaseViewset(ModelViewSet):
                 
                 serializer = PurchaseSerializer(instance)
                 
-                return Response({'purchase': serializer.data, 'message': 'Achat modifié avec succès.', 'type': success}, status=status.HTTP_201_CREATED)
+                return Response({'purchase': serializer.data, 'message': 'Achat modifié avec succès.', 'type': success}, status=status.HTTP_200_OK)
             except ValidationError as e:
                 error_message = e.messages
                 

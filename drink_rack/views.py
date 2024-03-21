@@ -74,7 +74,7 @@ class DrinkRackViewset(ModelViewSet):
                 
                 serializer = DrinkRackSerializer(instance)
                 
-                return Response({'drink_rack': serializer.data, 'message': 'Casier de boisson modifié avec succès.', 'type': success}, status=status.HTTP_201_CREATED)
+                return Response({'drink_rack': serializer.data, 'message': 'Casier de boisson modifié avec succès.', 'type': success}, status=status.HTTP_200_OK)
             except ValidationError as e:
                 error_message = e.messages
                 
