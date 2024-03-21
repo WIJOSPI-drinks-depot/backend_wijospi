@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 class Supply(models.Model):
-    date = models.DateField(default=datetime.now)
+    date_time = models.DateTimeField(default=datetime.now)
     storehouse = models.ForeignKey('storehouse.Storehouse', on_delete=models.CASCADE)
     drink_racks = models.ManyToManyField('drink_rack.DrinkRack', through='SupplyDrinkRack')
     created_at = models.DateTimeField(auto_now_add=True)
