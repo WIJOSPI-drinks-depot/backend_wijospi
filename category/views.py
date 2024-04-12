@@ -16,7 +16,7 @@ class CategoryViewset(ModelViewSet):
     serializer_class = CategorySerializer
     
     def get_queryset(self):
-        queryset = Category.objects.filter(deleted_at=None)
+        queryset = Category.objects.filter(deleted_at=None).order_by('name')
         
         return queryset
     
