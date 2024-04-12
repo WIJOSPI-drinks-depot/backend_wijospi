@@ -6,6 +6,8 @@ from rest_framework.viewsets import ModelViewSet
 
 from drink_rack.models import DrinkRack
 from drink_rack.serializers import DrinkRackSerializer
+from category.models import Category
+from packaging.models import Packaging
 
 # Messages types
 error = 'error'
@@ -38,8 +40,8 @@ class DrinkRackViewset(ModelViewSet):
                     capacity = drink_rack_capacity,
                     lifespan = drink_rack_lifespan,
                     price = drink_rack_price,
-                    category = drink_rack_category,
-                    packaging = drink_rack_packaging
+                    category = Category.objects.get(id = drink_rack_category),
+                    packaging = Packaging.objects.get(id = drink_rack_packaging)
                 )
                 
                 serializer = DrinkRackSerializer(drink_rack)
@@ -68,8 +70,8 @@ class DrinkRackViewset(ModelViewSet):
                 instance.capacity = drink_rack_capacity
                 instance.lifespan = drink_rack_lifespan
                 instance.price = drink_rack_price
-                instance.category = drink_rack_category
-                instance.packaging = drink_rack_packaging
+                instance.category = Category.objects.get(id = drink_rack_category)
+                instance.packaging = Packaging.objects.get(id = drink_rack_packaging)
                 instance.save()
                 
                 serializer = DrinkRackSerializer(instance)
