@@ -5,9 +5,9 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from drink_rack.models import DrinkRack
-from drink_rack.serializers import DrinkRackSerializer
 from category.models import Category
 from packaging.models import Packaging
+from drink_rack.serializers import DrinkRackSerializer
 
 # Messages types
 error = 'error'
