@@ -19,4 +19,4 @@ class PurchaseRackDrinkRackSerializer(ModelSerializer):
     
     class Meta:
         model = PurchaseRackDrinkRack
-        fields = ['id', 'purchase_rack', 'drink_rack', 'capacity']
+        fields = ['id', 'purchase_rack', 'drink_rack', 'drink_quantity']
