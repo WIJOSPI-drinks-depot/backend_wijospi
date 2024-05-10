@@ -32,16 +32,18 @@ class DrinkRackViewset(ModelViewSet):
                 drink_rack_capacity = json_data.get('capacity')
                 drink_rack_lifespan = json_data.get('lifespan')
                 drink_rack_price = json_data.get('price')
-                drink_rack_category = json_data.get('category')
-                drink_rack_packaging = json_data.get('packaging')
+                drink_rack_category_id = json_data.get('category')
+                drink_rack_category = Category.objects.get(id = drink_rack_category_id)
+                drink_rack_packaging_id = json_data.get('packaging')
+                drink_rack_packaging = Packaging.objects.get(id = drink_rack_packaging_id)
                 
                 drink_rack = DrinkRack.objects.create(
                     name = drink_rack_name,
                     capacity = drink_rack_capacity,
                     lifespan = drink_rack_lifespan,
                     price = drink_rack_price,
-                    category = Category.objects.get(id = drink_rack_category),
-                    packaging = Packaging.objects.get(id = drink_rack_packaging)
+                    category = drink_rack_category,
+                    packaging = drink_rack_packaging
                 )
                 
                 serializer = DrinkRackSerializer(drink_rack)
@@ -63,15 +65,17 @@ class DrinkRackViewset(ModelViewSet):
                 drink_rack_capacity = json_data.get('capacity')
                 drink_rack_lifespan = json_data.get('lifespan')
                 drink_rack_price = json_data.get('price')
-                drink_rack_category = json_data.get('category')
-                drink_rack_packaging = json_data.get('packaging')
+                drink_rack_category_id = json_data.get('category')
+                drink_rack_category = Category.objects.get(id = drink_rack_category_id)
+                drink_rack_packaging_id = json_data.get('packaging')
+                drink_rack_packaging = Packaging.objects.get(id = drink_rack_packaging_id)
                 
                 instance.name = drink_rack_name
                 instance.capacity = drink_rack_capacity
                 instance.lifespan = drink_rack_lifespan
                 instance.price = drink_rack_price
-                instance.category = Category.objects.get(id = drink_rack_category)
-                instance.packaging = Packaging.objects.get(id = drink_rack_packaging)
+                instance.category = drink_rack_category
+                instance.packaging = drink_rack_packaging
                 instance.save()
                 
                 serializer = DrinkRackSerializer(instance)

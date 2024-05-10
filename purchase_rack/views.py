@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from purchase.models import Purchase
 from purchase_rack.models import PurchaseRack
 from purchase_rack.models import PurchaseRackDrinkRack
 from purchase_rack.serializers import PurchaseRackSerializer
@@ -31,7 +32,8 @@ class PurchaseRackViewset(ModelViewSet):
                 
                 purchase_rack_capacity = json_data.get('capacity')
                 purchase_rack_quantity = json_data.get('quantity')
-                purchase_rack_purchase = json_data.get('purchase')
+                purchase_rack_purchase_id = json_data.get('purchase')
+                purchase_rack_purchase = Purchase.objects.get(id = purchase_rack_purchase_id)
                 
                 purchase_rack = PurchaseRack.objects.create(
                     capacity = purchase_rack_capacity,
@@ -59,7 +61,8 @@ class PurchaseRackViewset(ModelViewSet):
                 
                 purchase_rack_capacity = json_data.get('capacity')
                 purchase_rack_quantity = json_data.get('quantity')
-                purchase_rack_purchase = json_data.get('purchase')
+                purchase_rack_purchase_id = json_data.get('purchase')
+                purchase_rack_purchase = Purchase.objects.get(id = purchase_rack_purchase_id)
 
                 instance.capacity = purchase_rack_capacity
                 instance.quantity = purchase_rack_quantity

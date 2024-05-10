@@ -37,14 +37,15 @@ class SupplyViewset(ModelViewSet):
                 supply_date_time = parser.parse(supply_date_time_string)
                 supply_date_time_formatted = supply_date_time.strftime("%Y-%m-%d %H:%M:%S")
                 supply_storehouse_id = json_data.get('storehouse')
+                supply_storehouse = Storehouse.objects.get(id = supply_storehouse_id)
                 supply_drink_rack_id = json_data.get('drink_rack')
+                supply_drink_rack = DrinkRack.objects.get(id = supply_drink_rack_id)
                 supply_quantity = json_data.get('quantity')
 
                 # Données nécessaires au stockage des casiers dans le dépôt
                 store_house_drink_rack_creation_date = json_data.get('creation_date')
                 
-                supply_storehouse = Storehouse.objects.get(id = supply_storehouse_id)
-                supply_drink_rack = DrinkRack.objects.get(id = supply_drink_rack_id)
+                
                 
                 # Créer l'approvisionnement
                 supply = Supply.objects.create(
@@ -95,13 +96,15 @@ class SupplyViewset(ModelViewSet):
                 supply_date_time_string = json_data.get('date_time')
                 supply_date_time = parser.parse(supply_date_time_string)
                 supply_date_time_formatted = supply_date_time.strftime("%Y-%m-%d %H:%M:%S")
-                supply_storehouse = json_data.get('storehouse')
-                supply_drink_rack = json_data.get('drink_rack')
+                supply_storehouse_id = json_data.get('storehouse')
+                supply_storehouse = Storehouse.objects.get(id = supply_storehouse_id)
+                supply_drink_rack_id = json_data.get('drink_rack')
+                supply_drink_rack = DrinkRack.objects.get(id = supply_drink_rack_id)
                 supply_quantity = json_data.get('quantity')
                 
                 instance.date_time = supply_date_time_formatted
-                instance.storehouse = Storehouse.objects.get(id = supply_storehouse),
-                instance.drink_rack = DrinkRack.objects.get(id = supply_drink_rack),
+                instance.storehouse = supply_storehouse,
+                instance.drink_rack = supply_drink_rack,
                 instance.quantity = supply_quantity
                 instance.save()
                 
