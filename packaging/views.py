@@ -68,4 +68,4 @@ class PackagingViewset(ModelViewSet):
         instance = self.get_object()
         instance.soft_delete()
         
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Conditionnement supprimé avec succès.', 'type': success}, status=status.HTTP_204_NO_CONTENT)

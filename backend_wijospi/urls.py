@@ -4,15 +4,16 @@ from django.urls import path, include
 from rest_framework import routers
 
 from category.views import CategoryViewset
-from packaging.views import PackagingViewset
-from storehouse.views import StorehouseViewset
 # from storehouse.views import StorehouseDrinkRackViewset # Si on veut ajouter plusieurs boissons à un même approvisionnement
 from customer.views import CustomerViewset
 from drink_rack.views import DrinkRackViewset
-from supply.views import SupplyViewset
+from forecasting.views import GlabalForcastingViewSet
+from packaging.views import PackagingViewset
 from purchase.views import PurchaseViewset
 from purchase_rack.views import PurchaseRackViewset
 from purchase_rack.views import PurchaseRackDrinkRackViewset
+from storehouse.views import StorehouseViewset
+from supply.views import SupplyViewset
 
 router = routers.SimpleRouter()
 
@@ -26,8 +27,10 @@ router.register('supply', SupplyViewset, basename='supply')
 router.register('purchase', PurchaseViewset, basename='purchase')
 router.register('purchase-rack', PurchaseRackViewset, basename='purchase-rack')
 router.register('purchase-rack-drink-rack', PurchaseRackDrinkRackViewset, basename='purchase-rack-drink-rack')
+# router.register('global-forecasting', GlabalForcastingViewSet, basename='global-forecasting')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('api/global-forecasting/', GlabalForcastingViewSet.as_view({'get': 'generation_global_forecasting'}), name='global-forecasting'),
 ]
