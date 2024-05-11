@@ -12,6 +12,7 @@ from drink_rack.views import DrinkRackViewset
 from supply.views import SupplyViewset
 from purchase.views import PurchaseViewset
 from purchase_rack.views import PurchaseRackViewset
+from purchase_rack.views import PurchaseRackDrinkRackViewset
 
 router = routers.SimpleRouter()
 
@@ -24,6 +25,7 @@ router.register('drink-rack', DrinkRackViewset, basename='drink-rack')
 router.register('supply', SupplyViewset, basename='supply')
 router.register('purchase', PurchaseViewset, basename='purchase')
 router.register('purchase-rack', PurchaseRackViewset, basename='purchase-rack')
+router.register('purchase-rack-drink-rack', PurchaseRackDrinkRackViewset, basename='purchase-rack-drink-rack')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
