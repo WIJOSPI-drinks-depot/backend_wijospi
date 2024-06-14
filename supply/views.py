@@ -7,6 +7,8 @@ from rest_framework.viewsets import ModelViewSet
 
 from drink_rack.models import DrinkRack
 from storehouse.models import Storehouse
+from storehouse.models import StorehouseDrinkRack
+from storehouse.serializers import StorehouseDrinkRackSerializer
 from supply.models import Supply
 # from supply.models import SupplyDrinkRack # Si on veut ajouter plusieurs boissons à un même approvisionnement
 from supply.serializers import SupplySerializer
@@ -30,23 +32,52 @@ class SupplyViewset(ModelViewSet):
             try:
                 json_data = request.data
                 
+                # Données nécessaires à l'approvisionnement
                 supply_date_time_string = json_data.get('date_time')
                 supply_date_time = parser.parse(supply_date_time_string)
                 supply_date_time_formatted = supply_date_time.strftime("%Y-%m-%d %H:%M:%S")
-                supply_storehouse = json_data.get('storehouse')
-                supply_drink_rack = json_data.get('drink_rack')
+                supply_storehouse_id = json_data.get('storehouse')
+                supply_storehouse = Storehouse.objects.get(id = supply_storehouse_id)
+                supply_drink_rack_id = json_data.get('drink_rack')
+                supply_drink_rack = DrinkRack.objects.get(id = supply_drink_rack_id)
                 supply_quantity = json_data.get('quantity')
+
+                # Données nécessaires au stockage des casiers dans le dépôt
+                store_house_drink_rack_creation_date = json_data.get('creation_date')
                 
+                
+                
+                # Créer l'approvisionnement
                 supply = Supply.objects.create(
                     date_time = supply_date_time_formatted,
-                    storehouse = Storehouse.objects.get(id = supply_storehouse),
-                    drink_rack = DrinkRack.objects.get(id = supply_drink_rack),
+                    storehouse = supply_storehouse,
+                    drink_rack = supply_drink_rack,
                     quantity = supply_quantity,
                 )
                 
-                serializer = SupplySerializer(supply)
+                supply_serializer = SupplySerializer(supply)
                 
-                return Response({'supply': serializer.data, 'message': 'Approvisionnement enregistré avec succès.', 'type': success}, status=status.HTTP_201_CREATED)
+                # Stocker les casiers dans le dépôt
+                existing_drink_rack_with_creation_date = StorehouseDrinkRack.objects.filter(creation_date = store_house_drink_rack_creation_date,
+                                                                                            drink_rack_id = supply_drink_rack_id,
+                                                                                            storehouse_id = supply_storehouse_id).first()
+                
+                if(not existing_drink_rack_with_creation_date):
+                    storehouse_drink_rack = StorehouseDrinkRack.objects.create(
+                        storehouse = supply_storehouse,
+                        drink_rack = supply_drink_rack,
+                        stock_quantity = supply_quantity,
+                        creation_date = store_house_drink_rack_creation_date
+                    )
+                    
+                    storehouse_drink_rack_serializer = StorehouseDrinkRackSerializer(storehouse_drink_rack)
+                else:
+                    existing_drink_rack_with_creation_date.stock_quantity += supply_quantity
+                    existing_drink_rack_with_creation_date.save()
+                    
+                    storehouse_drink_rack_serializer = StorehouseDrinkRackSerializer(existing_drink_rack_with_creation_date)
+                
+                return Response({'supply': supply_serializer.data, 'storehouse_drink_rack': storehouse_drink_rack_serializer.data, 'message': 'Approvisionnement enregistré avec succès.', 'type': success}, status=status.HTTP_201_CREATED)
             except ValidationError as e:
                 error_message = e.messages
                 
@@ -65,13 +96,15 @@ class SupplyViewset(ModelViewSet):
                 supply_date_time_string = json_data.get('date_time')
                 supply_date_time = parser.parse(supply_date_time_string)
                 supply_date_time_formatted = supply_date_time.strftime("%Y-%m-%d %H:%M:%S")
-                supply_storehouse = json_data.get('storehouse')
-                supply_drink_rack = json_data.get('drink_rack')
+                supply_storehouse_id = json_data.get('storehouse')
+                supply_storehouse = Storehouse.objects.get(id = supply_storehouse_id)
+                supply_drink_rack_id = json_data.get('drink_rack')
+                supply_drink_rack = DrinkRack.objects.get(id = supply_drink_rack_id)
                 supply_quantity = json_data.get('quantity')
                 
                 instance.date_time = supply_date_time_formatted
-                instance.storehouse = Storehouse.objects.get(id = supply_storehouse),
-                instance.drink_rack = DrinkRack.objects.get(id = supply_drink_rack),
+                instance.storehouse = supply_storehouse,
+                instance.drink_rack = supply_drink_rack,
                 instance.quantity = supply_quantity
                 instance.save()
                 

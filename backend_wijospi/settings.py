@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'category',
     'customer',
     'drink_rack',
+    'forecasting',
     'packaging',
     'purchase',
     'purchase_rack',

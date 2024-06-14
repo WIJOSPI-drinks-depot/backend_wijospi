@@ -21,7 +21,7 @@ class PurchaseRack(models.Model):
 class PurchaseRackDrinkRack(models.Model):
     purchase_rack = models.ForeignKey(PurchaseRack, verbose_name="Casier d'achat", on_delete=models.CASCADE)
     drink_rack = models.ForeignKey("drink_rack.DrinkRack", verbose_name=("Casier de boisson"), on_delete=models.CASCADE)
-    capacity = models.IntegerField() # Quantité de boisson choisie du casier de boisson
+    drink_quantity = models.IntegerField() # Quantité de boisson choisie du casier de boisson
     
     class Meta:
         unique_together = ('purchase_rack', 'drink_rack')

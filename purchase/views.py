@@ -4,8 +4,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from customer.models import Customer
 from purchase.models import Purchase
 from purchase.serializers import PurchaseSerializer
+from storehouse.models import Storehouse
 
 # Messages types
 error = 'error'
@@ -27,8 +29,10 @@ class PurchaseViewset(ModelViewSet):
                 json_data = request.data
                 
                 purchase_date_time = json_data.get('date_time')
-                purchase_customer = json_data.get('customer')
-                purchase_storehouse = json_data.get('storehouse')
+                purchase_customer_id = json_data.get('customer')
+                purchase_customer = Customer.objects.get(id = purchase_customer_id)
+                purchase_storehouse_id = json_data.get('storehouse')
+                purchase_storehouse = Storehouse.objects.get(id = purchase_storehouse_id)
                 
                 purchase = Purchase.objects.create(
                     date_time = purchase_date_time,
@@ -55,8 +59,10 @@ class PurchaseViewset(ModelViewSet):
                 json_data = request.data
                 
                 purchase_date_time = json_data.get('date_time')
-                purchase_customer = json_data.get('customer')
-                purchase_storehouse = json_data.get('storehouse')
+                purchase_customer_id = json_data.get('customer')
+                purchase_customer = Customer.objects.get(id = purchase_customer_id)
+                purchase_storehouse_id = json_data.get('storehouse')
+                purchase_storehouse = Storehouse.objects.get(id = purchase_storehouse_id)
                 
                 instance.date_time = purchase_date_time
                 instance.customer = purchase_customer
