@@ -92,7 +92,7 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',   # L'adresse IP de votre base de données, généralement 'localhost' pour le développement en local
-        'PORT': '3307',        # Le port de votre base de données MySQL, généralement '3306' par défaut
+        'PORT': '3306',        # Le port de votre base de données MySQL, généralement '3306' par défaut
     }
 }
 
