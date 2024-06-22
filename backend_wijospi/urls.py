@@ -33,4 +33,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/global-forecasting/', GlabalForcastingViewSet.as_view({'get': 'generation_global_forecasting'}), name='global-forecasting'),
+    path('api/product-forecasting/<int:id>/', GlabalForcastingViewSet.as_view({'get': 'generation_product_forecasting'}), name='generation-product-forecasting'),
 ]
